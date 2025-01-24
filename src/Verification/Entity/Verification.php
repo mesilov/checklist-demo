@@ -104,5 +104,10 @@ class Verification
         $this->comment = $comment;
         $this->updatedAt = CarbonImmutable::now();
     }
+
+    public function getRuleGroupId(): Uuid
+    {
+        return $this->ruleGroupId;
+    }
 }
 

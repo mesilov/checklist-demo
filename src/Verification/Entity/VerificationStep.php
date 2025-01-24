@@ -31,8 +31,8 @@ class VerificationStep
     private Uuid $ruleId;
     #[ORM\Column(name: 'processing_status', type: 'string', nullable: false, enumType: ProcessingStatus::class)]
     private ProcessingStatus $processingStatus;
-    #[ORM\Column(name: 'step_status', type: 'string', nullable: false, enumType: VerificationStepStatus::class)]
-    private VerificationStepStatus $stepStatus;
+    #[ORM\Column(name: 'step_status', type: 'string', nullable: true, enumType: VerificationStepStatus::class)]
+    private ?VerificationStepStatus $stepStatus;
     #[ORM\Column(name: 'prompt', type: 'text', nullable: false)]
     private string $prompt;
     #[ORM\Column(name: 'reasoning', type: 'text', nullable: true)]
@@ -50,7 +50,7 @@ class VerificationStep
      * @param Uuid $verificationId
      * @param Uuid $ruleId
      * @param ProcessingStatus $stepStatus
-     * @param VerificationStepStatus $stepStatus
+     * @param ?VerificationStepStatus $stepStatus
      * @param string $prompt
      * @param string|null $reasoning
      * @param string|null $output
@@ -64,11 +64,11 @@ class VerificationStep
         Uuid $verificationId,
         Uuid $ruleId,
         ProcessingStatus $processingStatus,
-        VerificationStepStatus $stepStatus,
         string $prompt,
-        ?string $reasoning,
-        ?string $output,
-        ?int $tokenCost
+        ?VerificationStepStatus $stepStatus = null,
+        ?string $reasoning = null,
+        ?string $output = null,
+        ?int $tokenCost = null
     ) {
         $this->id = $id;
         $this->createdAt = $createdAt;

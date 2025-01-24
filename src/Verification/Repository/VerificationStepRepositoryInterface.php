@@ -11,4 +11,6 @@ use Symfony\Component\Uid\Uuid;
 interface VerificationStepRepositoryInterface
 {
     public function getById(Uuid $id): VerificationStep;
+
+    public function save(VerificationStep $verificationStep): void;
 }

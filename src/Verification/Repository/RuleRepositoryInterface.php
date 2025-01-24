@@ -11,5 +11,12 @@ use Symfony\Component\Uid\Uuid;
 interface RuleRepositoryInterface
 {
     public function getById(Uuid $id): Rule;
-    public function save(Rule $rule):void;
+
+    public function save(Rule $rule): void;
+
+    /**
+     * @param Uuid $ruleGroupId
+     * @return Rule[]
+     */
+    public function getByRuleGroupId(Uuid $ruleGroupId): array;
 }

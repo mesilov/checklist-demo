@@ -35,6 +35,16 @@ class RuleRepository extends ServiceEntityRepository implements RuleRepositoryIn
         return $res;
     }
 
+    public function getByRuleGroupId(Uuid $ruleGroupId): array
+    {
+        return $this->findBy(
+            [
+                'ruleGroupId' => $ruleGroupId,
+            ],
+        );
+    }
+
+
     public function save(Rule $rule): void
     {
         $this->getEntityManager()->persist($rule);
