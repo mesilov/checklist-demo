@@ -28,7 +28,7 @@ class Handler
                 $command->documentTypeIds,
                 new CarbonImmutable(),
                 new CarbonImmutable(),
-                RuleStatus::draft,
+                $command->status,
                 $command->name,
                 $command->rule,
                 $command->prompt,

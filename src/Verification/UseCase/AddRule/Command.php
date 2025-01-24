@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace B24io\Checklist\Verification\UseCase\AddRule;
 
+use B24io\Checklist\Verification\Entity\RuleStatus;
 use Symfony\Component\Uid\Uuid;
 
 readonly class Command
@@ -16,6 +17,7 @@ readonly class Command
          * @var Uuid[]
          */
         public array $documentTypeIds,
+        public RuleStatus $status,
         public string $name,
         public string $rule,
         public string $prompt,

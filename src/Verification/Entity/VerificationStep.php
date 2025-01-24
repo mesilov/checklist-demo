@@ -31,8 +31,8 @@ class VerificationStep
     private Uuid $ruleId;
     #[ORM\Column(name: 'processing_status', type: 'string', nullable: false, enumType: ProcessingStatus::class)]
     private ProcessingStatus $processingStatus;
-    #[ORM\Column(name: 'verification_status', type: 'string', nullable: false, enumType: VerificationStepStatus::class)]
-    private VerificationStepStatus $verificationStatus;
+    #[ORM\Column(name: 'step_status', type: 'string', nullable: false, enumType: VerificationStepStatus::class)]
+    private VerificationStepStatus $stepStatus;
     #[ORM\Column(name: 'prompt', type: 'text', nullable: false)]
     private string $prompt;
     #[ORM\Column(name: 'reasoning', type: 'text', nullable: true)]
@@ -50,7 +50,7 @@ class VerificationStep
      * @param Uuid $verificationId
      * @param Uuid $ruleId
      * @param ProcessingStatus $stepStatus
-     * @param VerificationStatus $verificationStatus
+     * @param VerificationStepStatus $stepStatus
      * @param string $prompt
      * @param string|null $reasoning
      * @param string|null $output
@@ -63,8 +63,8 @@ class VerificationStep
         Uuid $clientId,
         Uuid $verificationId,
         Uuid $ruleId,
-        ProcessingStatus $stepStatus,
-        VerificationStatus $verificationStatus,
+        ProcessingStatus $processingStatus,
+        VerificationStepStatus $stepStatus,
         string $prompt,
         ?string $reasoning,
         ?string $output,
@@ -76,8 +76,8 @@ class VerificationStep
         $this->clientId = $clientId;
         $this->verificationId = $verificationId;
         $this->ruleId = $ruleId;
-        $this->processingStatus = $stepStatus;
-        $this->verificationStatus = $verificationStatus;
+        $this->processingStatus = $processingStatus;
+        $this->stepStatus = $stepStatus;
         $this->prompt = $prompt;
         $this->reasoning = $reasoning;
         $this->output = $output;
@@ -85,13 +85,13 @@ class VerificationStep
     }
 
     public function markAsFinished(
-        VerificationStatus $verificationStatus,
+        VerificationStepStatus $verificationStatus,
         string $output,
         string $reasoning,
         int $tokenCost,
 
     ): void {
-        $this->verificationStatus = $verificationStatus;
+        $this->stepStatus = $verificationStatus;
         $this->output = $output;
         $this->reasoning = $reasoning;
         $this->tokenCost = $tokenCost;

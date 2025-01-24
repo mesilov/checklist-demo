@@ -31,9 +31,14 @@ class VerificationStepRepository extends ServiceEntityRepository implements Veri
     {
         $res = $this->find($id);
         if ($res === null) {
-            throw new \DomainException(sprintf('rule not found by id %s', $id->toRfc4122()));
+            throw new \DomainException(sprintf('verification step not found by id %s', $id->toRfc4122()));
         }
 
         return $res;
+    }
+
+    public function save(VerificationStep $step): void
+    {
+        $this->getEntityManager()->persist($step);
     }
 }

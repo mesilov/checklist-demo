@@ -2,6 +2,7 @@
 
 namespace B24io\Checklist\Tests\Functional\Verification\UseCase\AddRule;
 
+use B24io\Checklist\Verification\Entity\RuleStatus;
 use B24io\Checklist\Verification\Repository\RuleRepositoryInterface;
 use B24io\Checklist\Verification\UseCase\AddRule;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -34,6 +35,7 @@ class HandlerTest extends KernelTestCase
         $prompt = 'prompt';
         $weight = 10;
         $comment = 'comment';
+        $ruleStatus = RuleStatus::active;
 
         $addRuleHandler->handle(
             new AddRule\Command(
@@ -41,6 +43,7 @@ class HandlerTest extends KernelTestCase
                 $clientId,
                 $groupId,
                 $documentTypeIds,
+                $ruleStatus,
                 $ruleName,
                 $ruleBody,
                 $prompt,
