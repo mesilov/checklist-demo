@@ -17,6 +17,8 @@ class Rule
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'uuid', unique: true)]
     private Uuid $id;
+    #[ORM\Column(name: 'client_id', type: 'uuid', unique: false, nullable: false)]
+    private Uuid $clientId;
     #[ORM\Column(name: 'group_id', type: 'uuid', nullable: false)]
     private Uuid $groupId;
     #[ORM\Column(name: 'created_at', type: 'carbon_immutable', precision: 4, nullable: false)]
@@ -45,6 +47,7 @@ class Rule
 
     public function __construct(
         Uuid $id,
+        Uuid $clientId,
         Uuid $groupId,
         array $documentTypeIds,
         CarbonImmutable $createdAt,
@@ -57,6 +60,7 @@ class Rule
         ?string $comment = null
     ) {
         $this->id = $id;
+        $this->clientId = $id;
         $this->groupId = $groupId;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
@@ -105,6 +109,15 @@ class Rule
         $this->status = RuleStatus::disabled;
         $this->updatedAt = new CarbonImmutable();
         $this->comment = $comment;
+    }
+
+    public function markAsActive(?string $comment): void
+    {
+        $this->status = RuleStatus::active;
+        $this->updatedAt = new CarbonImmutable();
+        if ($comment !== null) {
+            $this->comment = $comment;
+        }
     }
 
     public function getComment(): ?string

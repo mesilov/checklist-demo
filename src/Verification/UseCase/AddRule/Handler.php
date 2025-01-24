@@ -22,11 +22,13 @@ class Handler
     {
         $this->ruleRepository->save(
             new Rule(
-                $command->uuid,
+                $command->id,
+                $command->clientId,
+                $command->groupId,
                 $command->documentTypeIds,
                 new CarbonImmutable(),
                 new CarbonImmutable(),
-                RuleStatus::active,
+                RuleStatus::draft,
                 $command->name,
                 $command->rule,
                 $command->prompt,

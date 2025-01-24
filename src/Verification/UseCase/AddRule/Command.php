@@ -9,7 +9,9 @@ use Symfony\Component\Uid\Uuid;
 readonly class Command
 {
     public function __construct(
-        public Uuid $uuid,
+        public Uuid $id,
+        public Uuid $clientId,
+        public UUid $groupId,
         /**
          * @var Uuid[]
          */
