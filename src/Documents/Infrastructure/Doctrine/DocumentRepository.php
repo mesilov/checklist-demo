@@ -34,4 +34,9 @@ class DocumentRepository extends ServiceEntityRepository implements DocumentRepo
 
         return $res;
     }
+
+    public function save(Document $document): void
+    {
+        $this->getEntityManager()->persist($document);
+    }
 }

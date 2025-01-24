@@ -10,4 +10,6 @@ use Symfony\Component\Uid\Uuid;
 interface DocumentRepositoryInterface
 {
     public function getById(Uuid $id): Document;
+
+    public function save(Document $document): void;
 }
