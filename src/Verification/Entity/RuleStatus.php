@@ -9,4 +9,5 @@ enum RuleStatus: string
     case draft = 'draft';
     case active = 'active';
     case disabled = 'disabled';
+    case deleted = 'deleted';
 }

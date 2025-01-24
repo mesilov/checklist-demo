@@ -34,4 +34,9 @@ class RuleRepository extends ServiceEntityRepository implements RuleRepositoryIn
 
         return $res;
     }
+
+    public function save(Rule $rule): void
+    {
+        $this->getEntityManager()->persist($rule);
+    }
 }

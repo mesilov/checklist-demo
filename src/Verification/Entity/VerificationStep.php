@@ -11,67 +11,103 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: VerificationStepRepository::class)]
+#[ORM\Table(name: 'verification_steps')]
 class VerificationStep
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id;
+    #[ORM\Column(name: 'id', type: 'uuid', unique: true)]
+    private Uuid $id;
     #[ORM\Column(name: 'created_at', type: 'carbon_immutable', precision: 4, nullable: false)]
     #[Ignore]
     public readonly CarbonImmutable $createdAt;
     #[ORM\Column(name: 'processed_at', type: 'carbon_immutable', precision: 4, nullable: true)]
     #[Ignore]
     private ?CarbonImmutable $processedAt;
-    #[ORM\Column(type: 'uuid', unique: false)]
+    #[ORM\Column(name: 'client_id', type: 'uuid', unique: false, nullable: false)]
     private Uuid $clientId;
-    #[ORM\Column(type: 'uuid', unique: false)]
-    private Uuid $documentId;
-    #[ORM\Column(type: 'uuid', unique: false)]
+    #[ORM\Column(name: 'verification_id', type: 'uuid', unique: false, nullable: false)]
+    private Uuid $verificationId;
+    #[ORM\Column(name: 'rule_id', type: 'uuid', unique: false, nullable: false)]
     private Uuid $ruleId;
-    #[ORM\Column(name: 'status', type: 'string', nullable: false, enumType: VerificationStatus::class)]
-    private VerificationStatus $status;
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(name: 'processing_status', type: 'string', nullable: false, enumType: ProcessingStatus::class)]
+    private ProcessingStatus $processingStatus;
+    #[ORM\Column(name: 'verification_status', type: 'string', nullable: false, enumType: VerificationStepStatus::class)]
+    private VerificationStepStatus $verificationStatus;
+    #[ORM\Column(name: 'prompt', type: 'text', nullable: false)]
+    private string $prompt;
+    #[ORM\Column(name: 'reasoning', type: 'text', nullable: true)]
+    private ?string $reasoning;
+    #[ORM\Column(name: 'output', type: 'text', nullable: true)]
     private ?string $output;
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $tokenCost;
 
     /**
-     * @param Uuid|null $id
+     * @param Uuid $id
      * @param CarbonImmutable $createdAt
+     * @param CarbonImmutable|null $processedAt
      * @param Uuid $clientId
-     * @param Uuid $documentId
+     * @param Uuid $verificationId
      * @param Uuid $ruleId
-     * @param VerificationStatus $status
+     * @param ProcessingStatus $stepStatus
+     * @param VerificationStatus $verificationStatus
+     * @param string $prompt
+     * @param string|null $reasoning
      * @param string|null $output
      * @param int|null $tokenCost
      */
     public function __construct(
-        ?Uuid $id,
+        Uuid $id,
         CarbonImmutable $createdAt,
+        ?CarbonImmutable $processedAt,
         Uuid $clientId,
-        Uuid $documentId,
+        Uuid $verificationId,
         Uuid $ruleId,
-        VerificationStatus $status,
+        ProcessingStatus $stepStatus,
+        VerificationStatus $verificationStatus,
+        string $prompt,
+        ?string $reasoning,
         ?string $output,
         ?int $tokenCost
     ) {
         $this->id = $id;
         $this->createdAt = $createdAt;
+        $this->processedAt = $processedAt;
         $this->clientId = $clientId;
-        $this->documentId = $documentId;
+        $this->verificationId = $verificationId;
         $this->ruleId = $ruleId;
-        $this->status = $status;
+        $this->processingStatus = $stepStatus;
+        $this->verificationStatus = $verificationStatus;
+        $this->prompt = $prompt;
+        $this->reasoning = $reasoning;
         $this->output = $output;
         $this->tokenCost = $tokenCost;
     }
 
-    public function markAsProcessed(VerificationStatus $status, string $output, int $tokenCost): void
-    {
+    public function markAsFinished(
+        VerificationStatus $verificationStatus,
+        string $output,
+        string $reasoning,
+        int $tokenCost,
+
+    ): void {
+        $this->verificationStatus = $verificationStatus;
         $this->output = $output;
-        $this->status = $status;
+        $this->reasoning = $reasoning;
         $this->tokenCost = $tokenCost;
+        $this->processingStatus = ProcessingStatus::finished;
+        $this->processedAt = CarbonImmutable::now();
+    }
+
+    public function markAsInProgress(): void
+    {
+        $this->processingStatus = ProcessingStatus::inProgress;
+        $this->processedAt = CarbonImmutable::now();
+    }
+
+    public function markAsFailure(): void
+    {
+        $this->processingStatus = ProcessingStatus::failure;
         $this->processedAt = CarbonImmutable::now();
     }
 }

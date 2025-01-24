@@ -11,4 +11,5 @@ use Symfony\Component\Uid\Uuid;
 interface RuleRepositoryInterface
 {
     public function getById(Uuid $id): Rule;
+    public function save(Rule $rule):void;
 }
