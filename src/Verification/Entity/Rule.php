@@ -7,6 +7,8 @@ namespace B24io\Checklist\Verification\Entity;
 use B24io\Checklist\Verification\Infrastructure\Doctrine\RuleRepository;
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use DomainException;
+use InvalidArgumentException;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Uid\Uuid;
 
@@ -65,12 +67,24 @@ class Rule
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
         $this->status = $status;
+        if ($documentTypeIds === []) {
+            throw new DomainException('rule must validate at least one document type');
+        }
         $this->documentTypeIds = $documentTypeIds;
         $this->name = $name;
         $this->rule = $rule;
         $this->prompt = $prompt;
         $this->comment = $comment;
         $this->weight = $weight;
+    }
+
+    /**
+     * @param Uuid $documentTypeId
+     * @return bool
+     */
+    public function isDocumentTypeSupported(Uuid $documentTypeId): bool
+    {
+        return in_array($documentTypeId, $this->documentTypeIds, true);
     }
 
     public function changeName(string $name): void
@@ -148,19 +162,6 @@ class Rule
     public function getWeight(): int
     {
         return $this->weight;
-    }
-
-    public function getStatus(): RuleStatus
-    {
-        return $this->status;
-    }
-
-    /**
-     * @return Uuid[]
-     */
-    public function getDocumentTypeIds(): array
-    {
-        return $this->documentTypeIds;
     }
 }
 

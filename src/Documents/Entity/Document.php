@@ -49,6 +49,11 @@ class Document
         return $this->id;
     }
 
+    public function getDocumentTypeId(): Uuid
+    {
+        return $this->documentTypeId;
+    }
+
     public function getText(): string
     {
         return $this->text;

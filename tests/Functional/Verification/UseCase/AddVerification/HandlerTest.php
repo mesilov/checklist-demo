@@ -131,9 +131,6 @@ class HandlerTest extends KernelTestCase
         ];
         yield '1 document 1 rule' => $data;
 
-        $filename = dirname(__DIR__, 5) . '/fixtures/documents/2308282665/policy.md';
-        $documentText = file_get_contents($filename);
-
         $clientId = Uuid::v7();
         $documentTypeId = Uuid::fromString('11111111-0000-0000-0000-000000000000');
         $rulesGroupId = Uuid::fromString('99999999-0000-0000-0000-000000000000');
@@ -179,5 +176,97 @@ class HandlerTest extends KernelTestCase
             )
         ];
         yield '1 document 2 rules' => $data;
+
+        $documentPolicy = file_get_contents(dirname(__DIR__, 5) . '/fixtures/documents/2308282665/policy.md');
+        $documentAgreement = file_get_contents(dirname(__DIR__, 5) . '/fixtures/documents/2308282665/agreement.md');
+
+        $clientId = Uuid::v7();
+        $documentPolicyTypeId = Uuid::fromString('10000000-0000-0000-0000-000000000000');
+        $documentAgreementTypeId = Uuid::fromString('20000000-0000-0000-0000-000000000000');
+        $rulesGroupId = Uuid::fromString('99999999-0000-0000-0000-000000000000');
+
+        $documentPolicyId = Uuid::v7();
+        $documentAgreementId = Uuid::v7();
+
+        $data = [
+            [
+                new AddNewDocument\Command($documentPolicyId, $clientId, $documentPolicyTypeId, $documentPolicy),
+                new AddNewDocument\Command($documentAgreementId, $clientId, $documentAgreementTypeId, $documentAgreement)
+            ],
+            [
+                new AddRule\Command(
+                    Uuid::v7(),
+                    $clientId,
+                    $rulesGroupId,
+                    [$documentPolicyTypeId, $documentAgreementTypeId],
+                    RuleStatus::active,
+                    'rule 1 name',
+                    'rule 1 body',
+                    'prompt 1 template',
+                    10,
+                    'rule 1 comment'
+                ),
+            ],
+            new AddVerification\Command(
+                Uuid::v7(),
+                $clientId,
+                [$documentPolicyId, $documentAgreementId],
+                $rulesGroupId,
+                LanguageModel::openAiGpt4o
+            )
+        ];
+        yield '2 documents 1 rule' => $data;
+
+        $documentPolicy = file_get_contents(dirname(__DIR__, 5) . '/fixtures/documents/2308282665/policy.md');
+        $documentAgreement = file_get_contents(dirname(__DIR__, 5) . '/fixtures/documents/2308282665/agreement.md');
+
+        $clientId = Uuid::v7();
+        $documentPolicyTypeId = Uuid::fromString('10000000-0000-0000-0000-000000000000');
+        $documentAgreementTypeId = Uuid::fromString('20000000-0000-0000-0000-000000000000');
+        $rulesGroupId = Uuid::fromString('99999999-0000-0000-0000-000000000000');
+
+        $documentPolicyId = Uuid::v7();
+        $documentAgreementId = Uuid::v7();
+
+        $data = [
+            [
+                new AddNewDocument\Command($documentPolicyId, $clientId, $documentPolicyTypeId, $documentPolicy),
+                new AddNewDocument\Command($documentAgreementId, $clientId, $documentAgreementTypeId, $documentAgreement)
+            ],
+            [
+                new AddRule\Command(
+                    Uuid::v7(),
+                    $clientId,
+                    $rulesGroupId,
+                    [$documentPolicyTypeId, $documentAgreementTypeId],
+                    RuleStatus::active,
+                    'rule 1 name - check two documents',
+                    'both documents must contain word «cat»',
+                    'prompt 1 template',
+                    10,
+                    'rule 1 comment'
+                ),
+                new AddRule\Command(
+                    Uuid::v7(),
+                    $clientId,
+                    $rulesGroupId,
+                    [$documentPolicyTypeId],
+                    RuleStatus::active,
+                    'rule 2 name - check one document',
+                    'document must contain word «black cat»',
+                    'prompt 2 template',
+                    10,
+                    'rule 2 comment'
+                ),
+            ],
+            new AddVerification\Command(
+                Uuid::v7(),
+                $clientId,
+                [$documentPolicyId, $documentAgreementId],
+                $rulesGroupId,
+                LanguageModel::openAiGpt4o
+            )
+        ];
+        yield '2 documents 2 rules' => $data;
     }
 }

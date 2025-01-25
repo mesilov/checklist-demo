@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace B24io\Checklist\Verification\UseCase\AddVerification;
 
+use B24io\Checklist\Documents\Entity\Document;
 use B24io\Checklist\Documents\Repository\DocumentRepositoryInterface;
 use B24io\Checklist\Services\Prompts\PromptBuilder;
 use B24io\Checklist\Verification\Entity\ProcessingStatus;
@@ -14,6 +15,7 @@ use B24io\Checklist\Verification\Repository\VerificationRepositoryInterface;
 use B24io\Checklist\Services\Flusher;
 use B24io\Checklist\Verification\Repository\VerificationStepRepositoryInterface;
 use Carbon\CarbonImmutable;
+use DomainException;
 use Symfony\Component\Uid\Uuid;
 
 readonly class Handler
@@ -48,14 +50,28 @@ readonly class Handler
         $rules = $this->ruleRepository->getByRuleGroupId($command->ruleGroupId);
 
         // load documents
+        /**
+         * @var Document[] $documents
+         */
         $documents = [];
         foreach ($command->documentIds as $documentId) {
             $documents[] = $this->documentRepository->getById($documentId);
         }
 
         foreach ($rules as $rule) {
+            // collect documents for rule
+            $documentsForRule = [];
+            foreach ($documents as $document) {
+                   if($rule->isDocumentTypeSupported($document->getDocumentTypeId())) {
+                       $documentsForRule[] = $document;
+                   }
+            }
+
+            // build prompt
             $prompt = $rule->getPrompt();
-            $finalPrompt = $this->promptBuilder->build($documents, $prompt);
+            $finalPrompt = $this->promptBuilder->build($documentsForRule, $prompt);
+
+            // save job
             $this->verificationStepRepository->save(
                 new VerificationStep(
                     Uuid::v7(),
@@ -69,8 +85,7 @@ readonly class Handler
                 )
             );
         }
-
         $this->flusher->flush();
-        //todo add tasks to queue
+        //todo add tasks to queue and call async
     }
 }
