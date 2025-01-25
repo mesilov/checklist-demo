@@ -35,7 +35,7 @@ readonly class Handler
         // save verification attempt
         $this->verificationRepository->save(
             new Verification(
-                $command->id,
+                $command->verificationId,
                 $command->clientId,
                 new CarbonImmutable(),
                 null,
@@ -78,7 +78,7 @@ readonly class Handler
                     new CarbonImmutable(),
                     null,
                     $command->clientId,
-                    $command->id,
+                    $command->verificationId,
                     $rule->getId(),
                     ProcessingStatus::new,
                     $finalPrompt

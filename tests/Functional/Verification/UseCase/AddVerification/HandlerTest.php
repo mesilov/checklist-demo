@@ -68,7 +68,7 @@ class HandlerTest extends KernelTestCase
         $addVerificationHandler = $container->get(AddVerification\Handler::class);
         $addVerificationHandler->handle($addVerificationCmd);
 
-        $verification = $verificationRepo->getById($addVerificationCmd->id);
+        $verification = $verificationRepo->getById($addVerificationCmd->verificationId);
 
         //verification contains added documents
         $this->assertEquals(
