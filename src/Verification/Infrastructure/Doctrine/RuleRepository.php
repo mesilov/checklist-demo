@@ -39,7 +39,7 @@ class RuleRepository extends ServiceEntityRepository implements RuleRepositoryIn
     {
         return $this->findBy(
             [
-                'ruleGroupId' => $ruleGroupId,
+                'id' => $ruleGroupId,
             ],
         );
     }

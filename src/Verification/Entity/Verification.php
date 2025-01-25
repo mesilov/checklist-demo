@@ -70,9 +70,9 @@ class Verification
         Uuid $ruleGroupId,
         ProcessingStatus $processingStatus,
         LanguageModel $model,
-        ?string $resultSummary,
-        ?string $comment,
-        ?int $totalTokenCost,
+        ?string $resultSummary = null,
+        ?string $comment = null,
+        ?int $totalTokenCost = null,
     ) {
         $this->id = $id;
         $this->clientId = $clientId;
@@ -105,9 +105,22 @@ class Verification
         $this->updatedAt = CarbonImmutable::now();
     }
 
+    /**
+     * @return Uuid[]
+     */
+    public function getDocumentIds(): array
+    {
+        return $this->documentIds;
+    }
+
     public function getRuleGroupId(): Uuid
     {
         return $this->ruleGroupId;
+    }
+
+    public function getProcessingStatus(): ProcessingStatus
+    {
+        return $this->processingStatus;
     }
 }
 

@@ -24,7 +24,7 @@ class VerificationRepository extends ServiceEntityRepository implements Verifica
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Rule::class);
+        parent::__construct($registry, Verification::class);
     }
 
     public function getById(Uuid $id): Verification

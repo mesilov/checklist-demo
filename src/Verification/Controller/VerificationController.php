@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace B24io\Checklist\Verification\Controller;
 
+use B24io\Checklist\Verification\Entity\LanguageModel;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,44 +14,33 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Uuid;
 use B24io\Checklist\Verification;
 
-class RulesController extends AbstractController
+class VerificationController extends AbstractController
 {
     public function __construct(
-        private Verification\UseCase\AddRule\Handler $handler,
+        private Verification\UseCase\AddVerification\Handler $handler,
         readonly private LoggerInterface $log
     ) {
     }
 
-    #[Route('/rules', methods: ['POST'])]
+    #[Route('/verifications', methods: ['POST'])]
     public function addRule(Request $request): JsonResponse
     {
-        $this->log->debug('rules.add', [$request->query->all()]);
+        $this->log->debug('verifications.add', [$request->query->all()]);
 
         $ruleId = Uuid::v7();
 
         //todo mvp limitations
         $clientId = Uuid::fromString('00000000-0000-0000-0000-000000000000');
         $groupId = Uuid::fromString('00000000-0000-0000-0000-000000000000');
-        $documentTypeId = Uuid::fromString('00000000-0000-0000-0000-000000000000');
-
-        $ruleName = 'rule name';
-        $ruleBody = 'rule body';
-        $rulePrompt = 'rule prompt';
-        $ruleWeight = 10;
-        $ruleComment = 'rule comment';
+        $documentId = Uuid::fromString('00000000-1111-0000-0000-000000000000');
 
         $this->handler->handle(
-            new Verification\UseCase\AddRule\Command(
+            new Verification\UseCase\AddVerification\Command(
                 $ruleId,
                 $clientId,
+                [$documentId],
                 $groupId,
-                [$documentTypeId],
-                Verification\Entity\RuleStatus::active,
-                $ruleName,
-                $ruleBody,
-                $rulePrompt,
-                $ruleWeight,
-                $ruleComment
+                LanguageModel::openAiGpt4o
             )
         );
 
