@@ -105,6 +105,11 @@ class Verification
         $this->updatedAt = CarbonImmutable::now();
     }
 
+    public function getId(): Uuid
+    {
+        return $this->id;
+    }
+
     /**
      * @return Uuid[]
      */

@@ -12,5 +12,11 @@ interface VerificationStepRepositoryInterface
 {
     public function getById(Uuid $id): VerificationStep;
 
-    public function save(VerificationStep $verificationStep): void;
+    /**
+     * @param Uuid $verificationId
+     * @return VerificationStep[]
+     */
+    public function getByVerificationId(Uuid $verificationId): array;
+
+    public function save(VerificationStep $verificationVerificationStep): void;
 }

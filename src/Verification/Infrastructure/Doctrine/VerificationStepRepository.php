@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace B24io\Checklist\Verification\Infrastructure\Doctrine;
 
-use B24io\Checklist\Documents\Entity\Document;
-use B24io\Checklist\Verification\Entity\Rule;
 use B24io\Checklist\Verification\Entity\VerificationStep;
-use B24io\Checklist\Verification\Repository\RuleRepositoryInterface;
 use B24io\Checklist\Verification\Repository\VerificationStepRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,8 +34,19 @@ class VerificationStepRepository extends ServiceEntityRepository implements Veri
         return $res;
     }
 
-    public function save(VerificationStep $step): void
+    /**
+     * @param Uuid $verificationId
+     * @return VerificationStep[]
+     */
+    public function getByVerificationId(Uuid $verificationId): array
     {
-        $this->getEntityManager()->persist($step);
+        return $this->findBy([
+            'verificationId' => $verificationId
+        ]);
+    }
+
+    public function save(VerificationStep $verificationStep): void
+    {
+        $this->getEntityManager()->persist($verificationStep);
     }
 }

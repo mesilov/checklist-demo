@@ -7,6 +7,7 @@ use B24io\Checklist\Verification\Entity\LanguageModel;
 use B24io\Checklist\Verification\Entity\RuleStatus;
 use B24io\Checklist\Verification\Repository\RuleRepositoryInterface;
 use B24io\Checklist\Verification\Repository\VerificationRepositoryInterface;
+use B24io\Checklist\Verification\Repository\VerificationStepRepositoryInterface;
 use B24io\Checklist\Verification\UseCase\AddRule;
 use B24io\Checklist\Verification\UseCase\AddVerification;
 use B24io\Checklist\Documents\UseCase\AddNewDocument;
@@ -32,13 +33,21 @@ class HandlerTest extends KernelTestCase
         $container = static::getContainer();
 
         /**
-         * @var AddRule\Handler $addRuleHandler
-         */
-        $addRuleHandler = $container->get(AddRule\Handler::class);
-        /**
          * @var VerificationRepositoryInterface $verificationRepo
          */
         $verificationRepo = $container->get(VerificationRepositoryInterface::class);
+        /**
+         * @var RuleRepositoryInterface $ruleRepo
+         */
+        $ruleRepo = $container->get(RuleRepositoryInterface::class);
+        /**
+         * @var VerificationStepRepositoryInterface $verificationStepRepo
+         */
+        $verificationStepRepo = $container->get(VerificationStepRepositoryInterface::class);
+        /**
+         * @var AddRule\Handler $addRuleHandler
+         */
+        $addRuleHandler = $container->get(AddRule\Handler::class);
         /**
          * @var AddNewDocument\Handler $addDocumentHandler
          */
@@ -66,6 +75,18 @@ class HandlerTest extends KernelTestCase
             array_map(static fn($cmd) => $cmd->id, $addDocumentCmd),
             $verification->getDocumentIds()
         );
+
+        // verification contains target rule group
+        $this->assertEquals(
+            $addVerificationCmd->ruleGroupId,
+            $verification->getRuleGroupId()
+        );
+
+        // verification produce N verification steps
+        // N === Rules count
+        $rules = $ruleRepo->getByRuleGroupId($addVerificationCmd->ruleGroupId);
+        $verificationSteps = $verificationStepRepo->getByVerificationId($verification->getId());
+        $this->assertEquals(count($rules), count($verificationSteps));
     }
 
     public static function samplesDataProvider(): \Generator
