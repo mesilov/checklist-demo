@@ -83,10 +83,13 @@ class HandlerTest extends KernelTestCase
         );
 
         // verification produce N verification steps
-        // N === Rules count
+        // where N === Rules count
         $rules = $ruleRepo->getByRuleGroupId($addVerificationCmd->ruleGroupId);
         $verificationSteps = $verificationStepRepo->getByVerificationId($verification->getId());
-        $this->assertEquals(count($rules), count($verificationSteps));
+        $this->assertEquals(
+            array_map(static fn($rule) => $rule->getId(), $rules),
+            array_map(static fn($step) => $step->getRuleId(), $verificationSteps)
+        );
     }
 
     public static function samplesDataProvider(): \Generator

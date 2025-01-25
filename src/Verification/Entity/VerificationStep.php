@@ -84,6 +84,10 @@ class VerificationStep
         $this->tokenCost = $tokenCost;
     }
 
+    public function getRuleId(): Uuid
+    {
+        return $this->ruleId;
+    }
     public function markAsFinished(
         VerificationStepStatus $verificationStatus,
         string $output,
