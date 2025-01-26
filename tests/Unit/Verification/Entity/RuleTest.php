@@ -28,6 +28,7 @@ class RuleTest extends TestCase
             'rule name',
             'rule body',
             'prompt template',
+            true
         );
     }
 
@@ -55,6 +56,7 @@ class RuleTest extends TestCase
                 'rule name',
                 'rule body',
                 'prompt template',
+                true
             ),
             $documentTypeId,
             true
@@ -71,6 +73,7 @@ class RuleTest extends TestCase
                 'rule name',
                 'rule body',
                 'prompt template',
+                true
             ),
             $documentTypeId,
             false

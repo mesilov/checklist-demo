@@ -21,6 +21,7 @@ readonly class Command
         public string $name,
         public string $rule,
         public string $prompt,
+        public bool $expectedResult,
         public int $weight,
         public ?string $comment
     ) {

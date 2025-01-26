@@ -31,6 +31,7 @@ class Rule
     private CarbonImmutable $updatedAt;
     #[ORM\Column(name: 'status', type: 'string', nullable: false, enumType: RuleStatus::class)]
     private RuleStatus $status;
+    // needed document types for this rule
     /**
      * @var array<int, Uuid>
      */
@@ -40,11 +41,13 @@ class Rule
     private string $name;
     #[ORM\Column(name: 'rule', type: 'text', nullable: false)]
     private string $rule;
-    #[ORM\Column(type: 'text', nullable: false)]
+    #[ORM\Column(name: 'prompt', type: 'text', nullable: false)]
     private string $prompt;
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(name: 'expected_result', type: 'boolean', nullable: false)]
+    private bool $expectedResult;
+    #[ORM\Column(name: 'comment', type: 'text', nullable: true)]
     private ?string $comment;
-    #[ORM\Column(type: 'integer', nullable: false)]
+    #[ORM\Column(name: 'weight', type: 'smallint', nullable: false)]
     private int $weight;
 
     public function __construct(
@@ -58,11 +61,12 @@ class Rule
         string $name,
         string $rule,
         string $prompt,
+        bool $expectedResult,
         int $weight = 1,
         ?string $comment = null
     ) {
         $this->id = $id;
-        $this->clientId = $id;
+        $this->clientId = $clientId;
         $this->groupId = $groupId;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
@@ -74,8 +78,14 @@ class Rule
         $this->name = $name;
         $this->rule = $rule;
         $this->prompt = $prompt;
+        $this->expectedResult = $expectedResult;
         $this->comment = $comment;
         $this->weight = $weight;
+    }
+
+    public function getExpectedResult(): bool
+    {
+        return $this->expectedResult;
     }
 
     /**

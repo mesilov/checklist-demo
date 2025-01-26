@@ -8,5 +8,4 @@ enum VerificationStepStatus: string
 {
     case fail = 'fail';
     case pass = 'pass';
-    case unknown = 'unknown';
 }

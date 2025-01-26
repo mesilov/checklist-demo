@@ -16,10 +16,15 @@ class TokensUsage
     private ?int $output;
 
     public function __construct(
-        int $input,
-        int $output
+        ?int $input=null,
+        ?int $output=null,
     ) {
         $this->input = $input;
         $this->output = $output;
+    }
+
+    public static function init(): self
+    {
+        return new self(null, null);
     }
 }

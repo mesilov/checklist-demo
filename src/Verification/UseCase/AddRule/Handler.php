@@ -32,6 +32,7 @@ class Handler
                 $command->name,
                 $command->rule,
                 $command->prompt,
+                $command->expectedResult,
                 $command->weight,
                 $command->comment
             )

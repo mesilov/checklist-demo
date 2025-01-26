@@ -43,6 +43,7 @@ class RuleRepositoryTest extends KernelTestCase
             'rule name',
             'default rule content',
             'find default rule content',
+            true,
             10,
             'comment'
         );
@@ -102,6 +103,7 @@ class RuleRepositoryTest extends KernelTestCase
                     'rule 1 name',
                     'rule 1 content',
                     'rule 1 prompt',
+                    true,
                     10,
                     'rule 1 comment'
                 )

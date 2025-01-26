@@ -16,9 +16,9 @@ use Symfony\Component\Uid\Uuid;
 class Verification
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Column(name: 'id', type: 'uuid', unique: true)]
     private Uuid $id;
-    #[ORM\Column(type: 'uuid', unique: false)]
+    #[ORM\Column(name: 'client_id', type: 'uuid', unique: false, nullable: false)]
     private Uuid $clientId;
     #[ORM\Column(name: 'created_at', type: 'carbon_immutable', precision: 4, nullable: false)]
     #[Ignore]
@@ -37,35 +37,15 @@ class Verification
     private ProcessingStatus $processingStatus;
     #[ORM\Column(name: 'model', type: 'string', nullable: false, enumType: LanguageModel::class)]
     private LanguageModel $model;
-    /**
-     * @see https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed
-     */
-    #[ORM\Column(name: 'seed_number', type: 'integer', nullable: false)]
-    #[ORM\GeneratedValue]
-    private int $seedNumber;
     #[ORM\Column(name: 'result_summary', type: 'text', nullable: true)]
     private ?string $resultSummary;
-    #[ORM\Column(name: 'comment', type: 'text', nullable: true)]
-    private ?string $comment;
-    #[ORM\Column(name: 'total_token_cost', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'note', type: 'text', nullable: true)]
+    private ?string $note;
+    #[ORM\Column(name: 'total_token_cost', type: 'integer', nullable: true, options: ['unsigned' => true])]
     private ?int $totalTokenCost;
     #[Embedded(class: UserFeedback::class, columnPrefix: "user_feedback_")]
     private UserFeedback $userFeedback;
 
-    /**
-     * @param Uuid $id
-     * @param Uuid $clientId
-     * @param CarbonImmutable $createdAt
-     * @param CarbonImmutable|null $processedAt
-     * @param Uuid[] $documentIds
-     * @param Uuid $ruleGroupId
-     * @param ProcessingStatus $processingStatus
-     * @param LanguageModel $model
-     * @param string|null $resultSummary
-     * @param string|null $comment
-     * @param int|null $totalTokenCost
-     * @param UserFeedback $userFeedback
-     */
     public function __construct(
         Uuid $id,
         Uuid $clientId,
@@ -76,7 +56,7 @@ class Verification
         ProcessingStatus $processingStatus,
         LanguageModel $model,
         ?string $resultSummary = null,
-        ?string $comment = null,
+        ?string $note = null,
         ?int $totalTokenCost = null,
     ) {
         $this->id = $id;
@@ -88,7 +68,7 @@ class Verification
         $this->processingStatus = $processingStatus;
         $this->model = $model;
         $this->resultSummary = $resultSummary;
-        $this->comment = $comment;
+        $this->note = $note;
         $this->totalTokenCost = $totalTokenCost;
         $this->userFeedback = UserFeedback::init();
     }
@@ -106,13 +86,8 @@ class Verification
         $this->processingStatus = ProcessingStatus::finished;
         $this->resultSummary = $resultSummary;
         $this->totalTokenCost = $totalTokenCost;
-        $this->comment = $comment;
+        $this->note = $comment;
         $this->updatedAt = CarbonImmutable::now();
-    }
-
-    public function getSeedNumber(): int
-    {
-        return $this->seedNumber;
     }
 
     public function getId(): Uuid

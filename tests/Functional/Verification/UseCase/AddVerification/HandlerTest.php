@@ -117,6 +117,7 @@ class HandlerTest extends KernelTestCase
                     'rule 1 name',
                     'rule 1 body',
                     'prompt 1 template',
+                    true,
                     10,
                     'rule 1 comment'
                 )
@@ -151,6 +152,7 @@ class HandlerTest extends KernelTestCase
                     'rule 1 name',
                     'rule 1 body',
                     'prompt 1 template',
+                    true,
                     10,
                     'rule 1 comment'
                 ),
@@ -163,6 +165,7 @@ class HandlerTest extends KernelTestCase
                     'rule 2 name',
                     'rule 2 body',
                     'prompt 2 template',
+                    true,
                     10,
                     'rule 2 comment'
                 )
@@ -203,6 +206,7 @@ class HandlerTest extends KernelTestCase
                     'rule 1 name',
                     'rule 1 body',
                     'prompt 1 template',
+                    true,
                     10,
                     'rule 1 comment'
                 ),
@@ -244,6 +248,7 @@ class HandlerTest extends KernelTestCase
                     'both documents must contain word «cat»',
                     'prompt 1 template',
                     10,
+                    true,
                     'rule 1 comment'
                 ),
                 new AddRule\Command(
@@ -256,6 +261,7 @@ class HandlerTest extends KernelTestCase
                     'document must contain word «black cat»',
                     'prompt 2 template',
                     10,
+                    true,
                     'rule 2 comment'
                 ),
             ],

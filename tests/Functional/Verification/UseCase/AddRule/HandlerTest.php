@@ -36,6 +36,7 @@ class HandlerTest extends KernelTestCase
         $weight = 10;
         $comment = 'comment';
         $ruleStatus = RuleStatus::active;
+        $expectedResult = true;
 
         $addRuleHandler->handle(
             new AddRule\Command(
@@ -47,6 +48,7 @@ class HandlerTest extends KernelTestCase
                 $ruleName,
                 $ruleBody,
                 $prompt,
+                $expectedResult,
                 $weight,
                 $comment
             )
@@ -58,5 +60,6 @@ class HandlerTest extends KernelTestCase
         $this->assertEquals($prompt, $saved->getPrompt());
         $this->assertEquals($weight, $saved->getWeight());
         $this->assertEquals($comment, $saved->getComment());
+        $this->assertEquals($expectedResult, $saved->getExpectedResult());
     }
 }
