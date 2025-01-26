@@ -8,7 +8,6 @@ use B24io\Checklist\Verification\Infrastructure\Doctrine\VerificationStepReposit
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Embedded;
-use Rarus\SoftPhone\Bitrix24\App\Calls\Entity\RecordMetadata;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Uid\Uuid;
 
@@ -38,6 +37,12 @@ class Verification
     private ProcessingStatus $processingStatus;
     #[ORM\Column(name: 'model', type: 'string', nullable: false, enumType: LanguageModel::class)]
     private LanguageModel $model;
+    /**
+     * @see https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed
+     */
+    #[ORM\Column(name: 'seed_number', type: 'integer', nullable: false)]
+    #[ORM\GeneratedValue]
+    private int $seedNumber;
     #[ORM\Column(name: 'result_summary', type: 'text', nullable: true)]
     private ?string $resultSummary;
     #[ORM\Column(name: 'comment', type: 'text', nullable: true)]
@@ -103,6 +108,11 @@ class Verification
         $this->totalTokenCost = $totalTokenCost;
         $this->comment = $comment;
         $this->updatedAt = CarbonImmutable::now();
+    }
+
+    public function getSeedNumber(): int
+    {
+        return $this->seedNumber;
     }
 
     public function getId(): Uuid

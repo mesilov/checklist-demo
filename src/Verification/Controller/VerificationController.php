@@ -40,7 +40,7 @@ class VerificationController extends AbstractController
                 $clientId,
                 [$documentId],
                 $groupId,
-                LanguageModel::openAiGpt4o
+                LanguageModel::gpt4oMini20240718
             )
         );
 

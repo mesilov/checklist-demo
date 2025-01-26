@@ -16,15 +16,23 @@ class RuleChecker
     ) {
     }
 
-    public function run(VerificationStep $step): VerificationStep
+    public function run(int $seedNumber, VerificationStep $step): VerificationStep
     {
         $this->logger->debug('RuleChecker.run', [
             'stepId' => $step->getId()->toRfc4122(),
         ]);
 
+        // structured output?
+        // continue chat with different queries
+
+        // call params
+
+        // {"temperature": 0.2, "top_p": 0.8, "frequency_penalty": 0.0, "presence_penalty": 0.0}
+        // metadata - for debug chats, add verification uuid and verification step uuid
+        // see https://platform.openai.com/docs/api-reference/chat
+
+
         dd($step->getPrompt());
-
-
     }
 }
 

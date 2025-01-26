@@ -6,6 +6,5 @@ namespace B24io\Checklist\Verification\Entity;
 
 enum LanguageModel: string
 {
-    case openAiGpt4o = 'openai-gpt-4o';
-    case openAiGpt4 = 'openai-gpt-4';
+    case gpt4oMini20240718 = 'gpt-4o-mini-2024-07-18';
 }

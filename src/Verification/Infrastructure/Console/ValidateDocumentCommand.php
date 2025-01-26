@@ -89,7 +89,7 @@ class ValidateDocumentCommand extends Command
                 $clientId,
                 [$documentId],
                 $groupId,
-                Verification\Entity\LanguageModel::openAiGpt4o
+                Verification\Entity\LanguageModel::gpt4oMini20240718
             )
         );
 

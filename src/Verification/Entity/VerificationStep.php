@@ -7,6 +7,7 @@ namespace B24io\Checklist\Verification\Entity;
 use B24io\Checklist\Verification\Infrastructure\Doctrine\VerificationStepRepository;
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Embedded;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Uid\Uuid;
 
@@ -39,23 +40,20 @@ class VerificationStep
     private ?string $reasoning;
     #[ORM\Column(name: 'output', type: 'text', nullable: true)]
     private ?string $output;
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $tokenCost;
-
     /**
-     * @param Uuid $id
-     * @param CarbonImmutable $createdAt
-     * @param CarbonImmutable|null $processedAt
-     * @param Uuid $clientId
-     * @param Uuid $verificationId
-     * @param Uuid $ruleId
-     * @param ProcessingStatus $stepStatus
-     * @param ?VerificationStepStatus $stepStatus
-     * @param string $prompt
-     * @param string|null $reasoning
-     * @param string|null $output
-     * @param int|null $tokenCost
+     * @see https://platform.openai.com/docs/api-reference/completions/object#completions/object-system_fingerprint
      */
+    #[ORM\Column(name: 'system_fingerprint', type: 'string', nullable: true)]
+    private ?string $systemFingerprint;
+
+    #[Embedded(class: UserFeedback::class, columnPrefix: "stat_")]
+    private TokensUsage $tokensUsage;
+
+    #[ORM\Column(name: 'duration', type: 'integer', nullable: true)]
+    private ?int $duration;
+    #[ORM\Column(name: 'model_version', type: 'string', nullable: true)]
+    private ?string $modelVersion;
+
     public function __construct(
         Uuid $id,
         CarbonImmutable $createdAt,
@@ -68,7 +66,10 @@ class VerificationStep
         ?VerificationStepStatus $stepStatus = null,
         ?string $reasoning = null,
         ?string $output = null,
-        ?int $tokenCost = null
+        ?string $systemFingerprint = null,
+        TokensUsage $tokensUsage = null,
+        ?int $duration = null,
+        ?string $modelVersion = null
     ) {
         $this->id = $id;
         $this->createdAt = $createdAt;
@@ -81,7 +82,10 @@ class VerificationStep
         $this->prompt = $prompt;
         $this->reasoning = $reasoning;
         $this->output = $output;
-        $this->tokenCost = $tokenCost;
+        $this->systemFingerprint = $systemFingerprint;
+        $this->tokensUsage = $tokensUsage;
+        $this->duration = $duration;
+        $this->modelVersion = $modelVersion;
     }
 
     public function getPrompt(): string
@@ -108,15 +112,18 @@ class VerificationStep
         VerificationStepStatus $verificationStatus,
         string $output,
         string $reasoning,
-        int $tokenCost,
-
+        TokensUsage $tokensUsage,
+        int $duration,
+        string $modelVersion
     ): void {
         $this->stepStatus = $verificationStatus;
         $this->output = $output;
         $this->reasoning = $reasoning;
-        $this->tokenCost = $tokenCost;
+        $this->tokensUsage = $tokensUsage;
         $this->processingStatus = ProcessingStatus::finished;
         $this->processedAt = CarbonImmutable::now();
+        $this->duration = $duration;
+        $this->modelVersion = $modelVersion;
     }
 
     public function markAsInProgress(): void

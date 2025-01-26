@@ -126,7 +126,7 @@ class HandlerTest extends KernelTestCase
                 $clientId,
                 [$documentId],
                 $rulesGroupId,
-                LanguageModel::openAiGpt4o
+                LanguageModel::gpt4oMini20240718
             )
         ];
         yield '1 document 1 rule' => $data;
@@ -172,7 +172,7 @@ class HandlerTest extends KernelTestCase
                 $clientId,
                 [$documentId],
                 $rulesGroupId,
-                LanguageModel::openAiGpt4o
+                LanguageModel::gpt4oMini20240718
             )
         ];
         yield '1 document 2 rules' => $data;
@@ -212,7 +212,7 @@ class HandlerTest extends KernelTestCase
                 $clientId,
                 [$documentPolicyId, $documentAgreementId],
                 $rulesGroupId,
-                LanguageModel::openAiGpt4o
+                LanguageModel::gpt4oMini20240718
             )
         ];
         yield '2 documents 1 rule' => $data;
@@ -264,7 +264,7 @@ class HandlerTest extends KernelTestCase
                 $clientId,
                 [$documentPolicyId, $documentAgreementId],
                 $rulesGroupId,
-                LanguageModel::openAiGpt4o
+                LanguageModel::gpt4oMini20240718
             )
         ];
         yield '2 documents 2 rules' => $data;

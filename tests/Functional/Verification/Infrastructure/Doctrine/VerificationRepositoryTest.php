@@ -45,7 +45,7 @@ class VerificationRepositoryTest extends KernelTestCase
                 $documentIds,
                 $ruleGroupId,
                 ProcessingStatus::new,
-                LanguageModel::openAiGpt4o
+                LanguageModel::gpt4oMini20240718
             )
         );
         $flusher->flush();
