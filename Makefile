@@ -56,7 +56,7 @@ dev-nginx-bash:
 
 # schema management
 app-test-validate-orm-schema:
-	docker-compose run --rm php-cli php bin/console doctrine:schema:validate
+	docker-compose run --rm php-cli php bin/console doctrine:schema:validate --verbose
 
 dev-migrations-make:
 	docker-compose run --rm php-cli php bin/console make:migration --no-interaction

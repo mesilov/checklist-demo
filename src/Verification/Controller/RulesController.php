@@ -38,6 +38,7 @@ class RulesController extends AbstractController
         $rulePrompt = 'rule prompt';
         $ruleWeight = 10;
         $ruleComment = 'rule comment';
+        $expectedResult = true;
 
         $this->handler->handle(
             new Verification\UseCase\AddRule\Command(
@@ -49,6 +50,7 @@ class RulesController extends AbstractController
                 $ruleName,
                 $ruleBody,
                 $rulePrompt,
+                $expectedResult,
                 $ruleWeight,
                 $ruleComment
             )

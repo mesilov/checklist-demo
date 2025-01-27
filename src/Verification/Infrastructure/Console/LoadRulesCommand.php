@@ -66,6 +66,7 @@ class LoadRulesCommand extends Command
                     $record['name'],
                     $record['rule'],
                     $record['prompt'],
+                    (bool)$record['expected_result'],
                     (int)$record['weight'],
                     $record['comment'],
                 )

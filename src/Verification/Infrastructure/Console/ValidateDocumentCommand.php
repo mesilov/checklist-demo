@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace B24io\Checklist\Verification\Infrastructure\Console;
 
 use B24io\Checklist\Services\Models\RuleChecker;
+use OpenAI;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,7 +53,9 @@ class ValidateDocumentCommand extends Command
 
         $output->writeln(['', '<info>Правила для проверки</info>',]);
         $groupId = Uuid::fromString('00000000-0000-0000-1000-000000000000');
+        $indexedRules = [];
         $rules = $this->ruleRepository->getByRuleGroupId($groupId);
+
         foreach ($rules as $rule) {
             $output->writeln(
                 sprintf(
@@ -62,6 +65,7 @@ class ValidateDocumentCommand extends Command
                     $rule->getRule()
                 )
             );
+            $indexedRules[$rule->getId()->toString()] = $rule;
         }
         $output->writeln('');
 
@@ -98,6 +102,9 @@ class ValidateDocumentCommand extends Command
 
         $steps = $this->verificationStepRepository->getByVerificationId($verificationId);
 
+
+        $client = OpenAI::client($_ENV['OPEN_AI_KEY']);
+
         foreach ($steps as $step) {
             $output->writeln(
                 sprintf(
@@ -108,8 +115,15 @@ class ValidateDocumentCommand extends Command
                 )
             );
 
-            $this->ruleChecker->run($step);
-
+            // one by one run rule in current thread
+            $this->ruleChecker->run(
+                $client,
+                Verification\Entity\LanguageModel::gpt4oMini20240718,
+                time(),
+                $step,
+                $indexedRules[$step->getRuleId()->toString()]->getExpectedResult(),
+                [$document]
+            );
         }
 
         return Command::SUCCESS;
